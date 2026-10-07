@@ -83,7 +83,8 @@ WSGI_APPLICATION = 'core.wsgi.application'
 # https://docs.djangoproject.com/en/6.1/ref/settings/#databases
 
 # Automatically use Vercel Neon Postgres in production, fallback to SQLite locally
-db_url = os.getenv("DATABASE_URL")
+# Check for either variable name
+db_url = os.getenv("DATABASE_URL") or os.getenv("POSTGRES_URL")
 
 if db_url:
     # Use your Neon Postgres snippet for the live Vercel environment
