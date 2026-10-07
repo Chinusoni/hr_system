@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}Request Submitted{% endblock %}
+
+{% block nav %}
+   <nav class="nav"><a href="{% url 'index' %}">🏠 Back to Dashboard</a></nav>
+{% endblock %}
+
+{% block content %}
+<div class="card success">
+    <div class="confetti"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+
+    <svg class="check" viewBox="0 0 120 120" aria-hidden="true">
+        <circle class="pulse" cx="60" cy="60" r="52" fill="#2ecc71"/>
+        <circle class="ring" cx="60" cy="60" r="52" fill="none" stroke="#2ecc71" stroke-width="7" stroke-linecap="round"/>
+        <path class="tick" d="M36 62 l17 17 l32 -36" fill="none" stroke="#fff" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+
+    <h2>Your leave request was <span class="grad">submitted successfully!</span> ✅</h2>
+    <p>HR will review it shortly. Sit back and start planning your break. 🌴</p>
+
+    <div class="cta">
+       <a class="btn" href="{% url 'index' %}">🏠 Go to Dashboard</a>
+        <a class="btn ghost" href="{% url 'request_leave' %}">➕ Another Request</a>
+    </div>
+</div>
+{% endblock %}

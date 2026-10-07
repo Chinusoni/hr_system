@@ -1,0 +1,172 @@
+{% extends "base.html" %}
+
+{% block title %}Company HR System{% endblock %}
+
+{% block nav %}
+    {% if user.is_authenticated %}
+        <nav class="nav">
+            <a href="{% url 'request_leave' %}">➕ Request Time Off</a>
+            <form action="{% url 'logout' %}" method="POST">
+                {% csrf_token %}
+                <button type="submit" class="ghost">Log Out</button>
+            </form>
+        </nav>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+{% if user.is_authenticated %}
+    <!-- WHAT LOGGED-IN EMPLOYEES SEE -->
+    <div class="card">
+        <div class="hero">
+            <div>
+                <h2>Welcome to the HR Portal,<br><span class="grad">{{ user.username }}</span>! 👋</h2>
+                <p>Plan your breaks, track your requests and recharge. Everything about your time off lives right here.</p>
+                <div class="cta">
+                    <a class="btn pink" href="{% url 'request_leave' %}">➕ Request Time Off</a>
+                </div>
+            </div>
+            <div class="art">
+                <!-- Beach / vacation illustration -->
+                <svg viewBox="0 0 400 320" aria-hidden="true">
+                    <defs>
+                        <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff9a8b"/><stop offset="1" stop-color="#7c5cff"/></linearGradient>
+                        <linearGradient id="sea" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#00d4ff"/><stop offset="1" stop-color="#0077b6"/></linearGradient>
+                    </defs>
+                    <rect width="400" height="320" rx="28" fill="url(#sky)"/>
+                    <circle cx="300" cy="100" r="46" fill="#ffe38a"><animate attributeName="r" values="46;50;46" dur="4s" repeatCount="indefinite"/></circle>
+                    <circle cx="300" cy="100" r="68" fill="#ffe38a" opacity=".25"/>
+                    <g fill="#fff" opacity=".85">
+                        <ellipse cx="90" cy="70" rx="38" ry="12"><animate attributeName="cx" values="90;130;90" dur="12s" repeatCount="indefinite"/></ellipse>
+                        <ellipse cx="120" cy="60" rx="24" ry="10"><animate attributeName="cx" values="120;160;120" dur="12s" repeatCount="indefinite"/></ellipse>
+                    </g>
+                    <path d="M0 200 Q100 180 200 200 T400 200 V320 H0Z" fill="url(#sea)"/>
+                    <path d="M0 215 Q100 195 200 215 T400 215" stroke="#fff" stroke-opacity=".5" stroke-width="3" fill="none">
+                        <animate attributeName="d" dur="5s" repeatCount="indefinite"
+                            values="M0 215 Q100 195 200 215 T400 215;M0 215 Q100 235 200 215 T400 215;M0 215 Q100 195 200 215 T400 215"/>
+                    </path>
+                    <path d="M0 262 Q120 240 240 262 T400 250 V320 H0Z" fill="#ffd89b"/>
+                    <!-- palm tree -->
+                    <path d="M92 270 Q100 210 118 150" stroke="#8a5a2b" stroke-width="10" fill="none" stroke-linecap="round"/>
+                    <g fill="#2ecc71" transform-origin="118 150">
+                        <path d="M118 150 Q80 120 52 140 Q90 130 118 150Z"/>
+                        <path d="M118 150 Q150 110 188 126 Q150 122 118 150Z"/>
+                        <path d="M118 150 Q95 105 112 82 Q118 115 118 150Z"/>
+                        <path d="M118 150 Q140 108 168 96 Q138 126 118 150Z"/>
+                        <animateTransform attributeName="transform" type="rotate" values="-2;2;-2" dur="5s" repeatCount="indefinite"/>
+                    </g>
+                    <!-- umbrella -->
+                    <line x1="290" y1="270" x2="290" y2="200" stroke="#fff" stroke-width="4"/>
+                    <path d="M240 205 Q290 150 340 205Z" fill="#ff5ca8"/>
+                    <path d="M265 205 Q290 160 315 205Z" fill="#fff" opacity=".5"/>
+                    <!-- plane -->
+                    <g>
+                        <path d="M0 0 l26 8 l-26 8 l6 -8Z" fill="#fff"/>
+                        <animateTransform attributeName="transform" type="translate" values="-40 40;440 20" dur="14s" repeatCount="indefinite"/>
+                    </g>
+                </svg>
+            </div>
+        </div>
+
+        <hr>
+
+        <h3>My Leave History 📅</h3>
+        {% if leaves %}
+            <ul class="leave-list">
+                {% for leave in leaves %}
+                    <li style="position: relative; padding-bottom: 15px;">
+                        <span class="dates">🗓️ {{ leave.start_date }} → {{ leave.end_date }}</span>
+                        <span class="tag">{{ leave.leave_type }}</span>
+
+                        <!-- Dynamic Status Badge -->
+                        <span class="tag" style="
+                            position: absolute; right: 15px; top: 15px; color: white;
+                            background-color:
+                                {% if leave.status == 'APPROVED' %}#2ecc71
+                                {% elif leave.status == 'REJECTED' %}#ff5ca8
+                                {% else %}#f39c12{% endif %};
+                        ">
+                            {{ leave.status }}
+                        </span>
+
+                        <br><em>{{ leave.reason }}</em>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <div class="empty">
+                <svg viewBox="0 0 160 140" aria-hidden="true">
+                    <rect x="20" y="30" width="120" height="96" rx="14" fill="#fff" opacity=".12" stroke="#fff" stroke-opacity=".4"/>
+                    <rect x="20" y="30" width="120" height="26" rx="14" fill="#7c5cff"/>
+                    <rect x="42" y="14" width="8" height="28" rx="4" fill="#00d4ff"/>
+                    <rect x="110" y="14" width="8" height="28" rx="4" fill="#00d4ff"/>
+                    <g fill="#fff" opacity=".5">
+                        <circle cx="50" cy="80" r="5"/><circle cx="80" cy="80" r="5"/><circle cx="110" cy="80" r="5"/>
+                        <circle cx="50" cy="104" r="5"/><circle cx="80" cy="104" r="5"/>
+                    </g>
+                    <circle cx="110" cy="104" r="7" fill="#ff5ca8"/>
+                </svg>
+                <p>You haven't submitted any leave requests yet.</p>
+            </div>
+        {% endif %}
+    </div>
+
+{% else %}
+    <!-- WHAT PUBLIC VISITORS SEE -->
+    <div class="card">
+        <div class="hero">
+            <div>
+                <h2>Welcome to the <span class="grad">Company HR System</span> 🏢</h2>
+                <p>Please log in or register to request time off.</p>
+                <nav class="cta">
+                    <a href="{% url 'login' %}"><button>Log In</button></a>
+                    <a href="{% url 'register' %}"><button class="ghost">Register Account</button></a>
+                </nav>
+                <div class="stats">
+                    <div class="stat"><b>⚡ 1 min</b><span>to request leave</span></div>
+                    <div class="stat"><b>📅 24/7</b><span>access anywhere</span></div>
+                    <div class="stat"><b>✅ Easy</b><span>HR approvals</span></div>
+                </div>
+            </div>
+            <div class="art">
+                <!-- Office / team illustration -->
+                <svg viewBox="0 0 400 320" aria-hidden="true">
+                    <defs>
+                        <linearGradient id="bld" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7c5cff"/><stop offset="1" stop-color="#302b63"/></linearGradient>
+                    </defs>
+                    <rect width="400" height="320" rx="28" fill="#1b1846" opacity=".7"/>
+                    <g fill="#fff" opacity=".7"><circle cx="40" cy="40" r="2"/><circle cx="350" cy="60" r="2"/><circle cx="300" cy="30" r="1.5"/><circle cx="90" cy="80" r="1.5"/></g>
+                    <rect x="130" y="60" width="140" height="220" rx="10" fill="url(#bld)"/>
+                    <rect x="60" y="130" width="80" height="150" rx="8" fill="#3d3590"/>
+                    <rect x="260" y="110" width="80" height="170" rx="8" fill="#3d3590"/>
+                    <g fill="#ffe38a">
+                        <rect x="146" y="80" width="22" height="16" rx="3"><animate attributeName="opacity" values="1;.3;1" dur="3s" repeatCount="indefinite"/></rect>
+                        <rect x="189" y="80" width="22" height="16" rx="3"/>
+                        <rect x="232" y="80" width="22" height="16" rx="3"><animate attributeName="opacity" values="1;.4;1" dur="4s" repeatCount="indefinite"/></rect>
+                        <rect x="146" y="120" width="22" height="16" rx="3"/>
+                        <rect x="189" y="120" width="22" height="16" rx="3"><animate attributeName="opacity" values="1;.3;1" dur="5s" repeatCount="indefinite"/></rect>
+                        <rect x="232" y="120" width="22" height="16" rx="3"/>
+                        <rect x="146" y="160" width="22" height="16" rx="3"/>
+                        <rect x="189" y="160" width="22" height="16" rx="3"/>
+                        <rect x="232" y="160" width="22" height="16" rx="3"><animate attributeName="opacity" values="1;.3;1" dur="3.5s" repeatCount="indefinite"/></rect>
+                    </g>
+                    <g fill="#00d4ff" opacity=".7">
+                        <rect x="74" y="150" width="14" height="12" rx="2"/><rect x="100" y="150" width="14" height="12" rx="2"/>
+                        <rect x="74" y="180" width="14" height="12" rx="2"/><rect x="100" y="180" width="14" height="12" rx="2"/>
+                        <rect x="276" y="130" width="14" height="12" rx="2"/><rect x="304" y="130" width="14" height="12" rx="2"/>
+                        <rect x="276" y="160" width="14" height="12" rx="2"/><rect x="304" y="160" width="14" height="12" rx="2"/>
+                    </g>
+                    <rect x="180" y="215" width="40" height="65" rx="6" fill="#ff5ca8"/>
+                    <rect x="0" y="278" width="400" height="42" fill="#12102e"/>
+                    <!-- floating badge -->
+                    <g>
+                        <circle cx="330" cy="60" r="26" fill="#00d4ff"/>
+                        <path d="M318 60 l9 9 l17 -18" stroke="#fff" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                        <animateTransform attributeName="transform" type="translate" values="0 0;0 -10;0 0" dur="3s" repeatCount="indefinite"/>
+                    </g>
+                </svg>
+            </div>
+        </div>
+    </div>
+{% endif %}
+{% endblock %}

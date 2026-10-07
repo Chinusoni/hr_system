@@ -1,0 +1,10 @@
+# Python environment
+env/
+__pycache__/
+*.pyc
+
+# Django local database
+db.sqlite3
+
+# OS files
+.DS_Store

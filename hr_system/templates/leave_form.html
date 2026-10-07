@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}Request Time Off{% endblock %}
+
+{% block nav %}
+    <nav class="nav"><a href="{% url 'index' %}">🏠 Back to Dashboard</a></nav>
+{% endblock %}
+
+{% block content %}
+<div class="card narrow">
+    <div class="form-head">
+        <svg viewBox="0 0 80 80" aria-hidden="true">
+            <circle cx="40" cy="40" r="38" fill="#7c5cff" opacity=".35"/>
+            <rect x="16" y="22" width="48" height="42" rx="8" fill="#fff"/>
+            <rect x="16" y="22" width="48" height="13" rx="8" fill="#ff5ca8"/>
+            <rect x="26" y="14" width="5" height="14" rx="2.5" fill="#00d4ff"/>
+            <rect x="49" y="14" width="5" height="14" rx="2.5" fill="#00d4ff"/>
+            <g fill="#7c5cff"><circle cx="28" cy="46" r="3"/><circle cx="40" cy="46" r="3"/><circle cx="52" cy="46" r="3"/><circle cx="28" cy="57" r="3"/></g>
+            <circle cx="40" cy="57" r="4" fill="#00d4ff"><animate attributeName="r" values="4;5.5;4" dur="2s" repeatCount="indefinite"/></circle>
+        </svg>
+        <div>
+            <h2>Submit a <span class="grad">Leave Request</span> 🏖️</h2>
+            <p>Fill in the details and HR will take it from here.</p>
+        </div>
+    </div>
+    <hr>
+
+    <form method="POST">
+        <!-- This is a security token Django requires for all forms! -->
+        {% csrf_token %}
+
+        <!-- This magically renders our Python form as HTML -->
+        {{ form.as_p }}
+
+        <button type="submit" class="btn pink full">🚀 Submit Request</button>
+    </form>
+</div>
+{% endblock %}
